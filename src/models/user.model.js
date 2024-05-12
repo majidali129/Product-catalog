@@ -5,7 +5,8 @@ const userSchema = Schema(
     {
     name: {
         type: String,
-        required: [true, 'User name is required']
+        required: [true, 'User name is required'],
+        minLength: [6, 'Name should be equal or grater than 6 characters']
     },
     email: {
         type: String,
@@ -45,8 +46,8 @@ userSchema.pre('save', async function(next) {
 })
 
 // password validation if same
-userSchema.methods.isPasswordCorrect = async () => {
-
+userSchema.methods.isPasswordCorrect = async function (candidatePassword, userPassword){
+    return await bcrypt.compare(userPassword, candidatePassword)
 }
 
 export const User = mongoose.model('User', userSchema)
