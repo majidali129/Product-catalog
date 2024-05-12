@@ -35,4 +35,11 @@ const updateProduct = asyncHandler (async (req, res, next) => {
     res.json(new appResponse(200, product))
 })
 
-export {getAllProducts, addNewProduct, getProductById, updateProduct}
+const deleteProduct = asyncHandler (async (req, res, next) => {
+    const result = await Product.findByIdAndDelete(req.params.id)
+    if(!result) return next(new appError('Product not found for that iD', 404))
+
+    res.json(new appResponse(200, null))
+})
+
+export {getAllProducts, addNewProduct, getProductById, updateProduct, deleteProduct}

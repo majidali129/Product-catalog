@@ -3,6 +3,7 @@ import morgan from 'morgan';
 
 import productRouter from './routes/product.routes.js'
 import categoryRouter from './routes/category.routes.js'
+import reviewRouter from './routes/review.routes.js'
 import bodyParser from 'body-parser';
 
 
@@ -22,6 +23,7 @@ app.use(bodyParser.json());
 // ROUTE MOUNTING
 app.use('/api/v1/products', productRouter)
 app.use('/api/v1/categories', categoryRouter)
+app.use('/api/v1/reviews', reviewRouter)
 
 
 export {app}

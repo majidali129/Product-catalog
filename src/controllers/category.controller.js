@@ -23,4 +23,10 @@ const getCategoryById = asyncHandler(async (req, res, next) => {
     res.json(new appResponse('200',category))
 })
 
-export {createNewCategory, getAllCategories, getCategoryById}
+const deleteCategory = asyncHandler(async (req, res, next) =>{
+    const result = await Category.findByIdAndDelete(req.params.id)
+    if(!result) return next(new appError('No category for that ID', 400))
+    res.json(new appResponse('200', null))
+})
+
+export {createNewCategory, getAllCategories, getCategoryById, deleteCategory}

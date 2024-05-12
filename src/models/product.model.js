@@ -32,14 +32,13 @@ const productSchema = Schema({
 }, {timestamps: true});
 
 
+// Responsible to set product id in featuredProducts list for target category
 productSchema.pre('save', async function(next) {
-    if(!this.isFeatured) return next()
     const catName = this.category.charAt(0).toUpperCase() + this.category.slice(1)
-console.log(catName)
     const category = await Category.findOne({name:catName})
-    console.log(category)
+    category.noOfItems += 1;
+    if(!this.isFeatured) return next()
     if(!category) return next(new appError('Category not found'));
-
     category.featuredProducts.push(this._id);
     await category.save();
     next()
