@@ -2,6 +2,7 @@ import { Product } from '../models/product.model.js'
 import { appError } from '../utils/appError.js';
 import {asyncHandler} from '../utils/asyncHandler.js'
 import { appResponse } from '../utils/appResponse.js';
+import { apiFeatures } from '../utils/apiFeatures.js';
 
 
 const addNewProduct = asyncHandler(async(req,res, next) => {
@@ -11,8 +12,11 @@ const addNewProduct = asyncHandler(async(req,res, next) => {
     res.json(new appResponse(201, products))
 })
 
+
 const getAllProducts = asyncHandler(async (req, res, next) => {
-    const products = await Product.find();
+    const features = new apiFeatures(Product.find(), req.query);
+    features.filter().sort().fields().pagenate()
+    const products = await features.query;
 
     res.json(new appResponse(200, products,products.length))
 });
