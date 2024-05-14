@@ -28,6 +28,7 @@ const userSchema = Schema(
             message: 'Passwords does not match'
         }
     },
+    passwordChangedAt: Date,
     role: {
         required: [true, 'User role is necessary'],
         type: String,
@@ -45,9 +46,23 @@ userSchema.pre('save', async function(next) {
     next()
 })
 
+// To hide user password
+// userSchema.pre(/^find/, function(next) {
+//     this.find().select('-password')
+//     next()
+// })
+
 // password validation if same
 userSchema.methods.isPasswordCorrect = async function (candidatePassword, userPassword){
     return await bcrypt.compare(userPassword, candidatePassword)
+}
+
+userSchema.methods.checkForPasswordChangedAfterTokenIssue = function(JWTTimestamp) {
+    if(this.passwordChangedAt){
+        const updatedTimeStamp = parseInt(this.passwordChangedAt.getTime()/1000, 10)
+        return JWTTimestamp < updatedTimeStamp
+    }
+    return false;
 }
 
 export const User = mongoose.model('User', userSchema)

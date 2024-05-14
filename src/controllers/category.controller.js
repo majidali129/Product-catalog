@@ -2,31 +2,15 @@ import { Category } from '../models/category.model.js'
 import {asyncHandler} from '../utils/asyncHandler.js'
 import {appResponse} from '../utils/appResponse.js'
 import {appError} from '../utils/appError.js'
+import {createOne, deleteOne, getAll, getOne} from './factory.controller.js'
 
 
-const createNewCategory = asyncHandler(async(req, res, next) => {
-    const category = await Category.insertMany(req.body)
-    if(!category) return next(new appError('Filled to add new category. Try again later', 500))
+const createNewCategory = createOne(Category)
 
-    res.json(new appResponse(201, category))
-})
+const getAllCategories = getAll(Category)
 
-const getAllCategories = asyncHandler(async (req, res, next) => {
-    const categories = await Category.find();
+const getCategoryById = getOne(Category)
 
-    res.json(new appResponse(200, categories, categories.length))
-})
-
-const getCategoryById = asyncHandler(async (req, res, next) => {
-    const category = await Category.findById(req.params.id).populate('featuredProducts');
-
-    res.json(new appResponse('200',category))
-})
-
-const deleteCategory = asyncHandler(async (req, res, next) =>{
-    const result = await Category.findByIdAndDelete(req.params.id)
-    if(!result) return next(new appError('No category for that ID', 400))
-    res.json(new appResponse('200', null))
-})
+const deleteCategory = deleteOne(Category)
 
 export {createNewCategory, getAllCategories, getCategoryById, deleteCategory}

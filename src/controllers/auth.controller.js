@@ -33,7 +33,7 @@ const login = asyncHandler(async (req, res, next) => {
     return next(new appError('Please provide email and password', 400));
   const user = await User.findOne({ email: req.body.email });
   if (!user) return next(new appError('User not found', 404));
-  if (!user.isPasswordCorrect(req.body.password, user.password))
+  if (!user.isPasswordCorrect(password, user.password))
     return next(new appError('Invalid email or password', 400));
   user.password = undefined;
   res.status(200).json({
